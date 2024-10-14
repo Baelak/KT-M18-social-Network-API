@@ -1,18 +1,26 @@
-require('dotenv').config();
 const express = require('express');
-const db = require('./config/connection');
-const routes = require('./routes');
+const mongoose = require('mongoose');
+const userRoutes = require('./routes/api/userRoutes');
+const thoughtRoutes = require('./routes/api/thoughtRoutes');
+require('dotenv').config();
 
-const PORT = process.env.PORT || 3001;
 const app = express();
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(routes);
+// Routes
+app.use('/api/users', userRoutes);
+app.use('/api/thoughts', thoughtRoutes);
 
-db.once('open', () => {
-  app.listen(PORT, () => {
-    console.log(`API server running on port ${PORT}!`);
-  });
-});
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => {
+    app.listen(PORT, () => {
+        console.log(`💚 Server running on port ${PORT}`);
+    });
+})
+.catch((err) => console.error(err));
