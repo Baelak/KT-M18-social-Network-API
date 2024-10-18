@@ -25,7 +25,7 @@ module.exports = {
       .then((thought) => {
         return User.findOneAndUpdate(
           { username: req.body.username },
-          { $addToSet: { thoughts: thought._id } },
+          { $addToSet: { thought: thought._id } },
           { new: true }
         );
       })
@@ -36,8 +36,8 @@ module.exports = {
             })
           : res.json({
             message: '🎉 Thought Created 🎉',
-          thought: thought})
-      )
+          
+        }))
       .catch((err) => res.status(500).json(err));
   },
 
